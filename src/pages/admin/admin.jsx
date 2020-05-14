@@ -41,9 +41,10 @@ export default class Admin extends Component {
         /*注意这里的Switch外面是否可以省略掉 BrowserRouter
         Route 导航的内容放在 Content 容器内
         默认路由： <Redirect to="/home"/>
+        minHeight: "100%": 防止富文本编辑器组件里的尾部被挤掉不见了
         */
         return (
-            <Layout style={{height: "100%"}}>
+            <Layout style={{minHeight: "100%"}}>
                 <Sider>
                     <LeftNav/>
                 </Sider>

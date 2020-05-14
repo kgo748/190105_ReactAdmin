@@ -8,6 +8,7 @@ import {ArrowLeftOutlined} from "@ant-design/icons";
 import LinkButton from "../../components/link-button/index";
 import {reqCategories,reqAddOrUpdateProduct} from "../../api/index";
 import PicturesWall from "./pictures-wall";
+import RichTextEditor from "./rich-text-editor";
 
 const {Item}=Form;
 const { TextArea } = Input;
@@ -33,8 +34,10 @@ export default class ProductAddUpdate extends Component {
     constructor (props) {
         super(props);
 
-        // 父组件调用子组件的方法步骤1：创建用来保存ref标识的标签对象的容器
+        // ProductAddUpdate > PicturesWall: 父组件调用子组件的方法步骤1：创建用来保存ref标识的标签对象的容器
         this.pw = React.createRef();
+        // ProductAddUpdate > RichTextEditor:
+        this.editor = React.createRef();
     }
 
     /*初始化 Cascader的options数组*/
@@ -123,32 +126,33 @@ export default class ProductAddUpdate extends Component {
             this.setState({
                 options: [...this.state.options],
             });
-        },200);
+        },100);
     };
 
     /*表单数据提交*/
     onFinish = async values => {
-        console.log('add-update...form...values: :', values);//表单所有的数据对象
+        //console.log('add-update...form...values: :', values);//表单所有的数据对象
         // 1. 收集数据, 并封装成product对象
-        const {name, desc, price, categoryIds,detail} = values;
+        const {name, desc, price, categoryIds} = values;
         let pCategoryId, categoryId;
-        if (categoryIds.length===1) {
+        if (categoryIds.length===1) { //说明是一个一级分类
             pCategoryId = '0';
             categoryId = categoryIds[0]
-        } else {
+        } else {                      //说明是一个二级分类
             pCategoryId = categoryIds[0];
             categoryId = categoryIds[1];
         }
         /*父组件调用子组件的方法步骤3：读取子组件里的方法*/
         const imgs = this.pw.current.getImgs();
+        const detail = this.editor.current.getDetail();
 
-        const product = {name, desc, price, imgs, detail, pCategoryId, categoryId};
+        const product = {name, desc, price, pCategoryId, categoryId, imgs, detail};
 
-        // 如果是更新, 需要添加_id
+        // 如果是更新, 需要添加_id(根据有没有_id来判断是更新还是添加操作)
         if(this.isUpdate) {
             product._id = this.product._id;
         }
-        console.log("add-update...product: ", product);
+        //console.log("add-update...product: ", product);
 
         // 2. 调用接口请求函数去添加/更新
         const result = await reqAddOrUpdateProduct(product);
@@ -156,7 +160,7 @@ export default class ProductAddUpdate extends Component {
         // 3. 根据结果提示
         if (result.status===0) {
             message.success(`${this.isUpdate ? '更新' : '添加'}商品成功!`);
-            this.props.history.goBack()
+            this.props.history.goBack();//返回到列表界面
         } else {
             message.error(`${this.isUpdate ? '更新' : '添加'}商品失败!`);
         }
@@ -237,8 +241,8 @@ export default class ProductAddUpdate extends Component {
                         name: product.name,
                         desc: product.desc,
                         price: product.price,
-                        imgs: product.imgs,
-                        detail: product.detail,
+                        //imgs: product.imgs,//比较麻烦的就不用给默认值了，会在子组件里设置的
+                        //detail: product.detail,
                         categoryIds: categoryIds    /*注意属性是：categoryIds*/
                     }}
                 >
@@ -293,13 +297,16 @@ export default class ProductAddUpdate extends Component {
                     >
                         {/*imgs={imgs}，更新时把imgs传递给子组件*/}
                         {/*父组件调用子组件的方法步骤2：ref={this.pw}*/}
-                        <PicturesWall  ref={this.pw} imgs={imgs}/>
+                        <PicturesWall ref={this.pw} imgs={imgs}/>
                     </Item>
                     <Item
                         name="detail"
                         label="商品详情"
+                        labelCol={{span: 2}}/*设置子组件RichTextEditor里富文本编辑器的样式*/
+                        wrapperCol={{span: 20}}
                     >
-                        <Input placeholder="请输入商品详情"/>
+                        {/**/}
+                        <RichTextEditor ref={this.editor} detail={product.detail}/>
                     </Item>
                     <Item {...tailLayout}>
                         <Button type="primary" htmlType="submit">

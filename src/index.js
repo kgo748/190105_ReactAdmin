@@ -1,6 +1,7 @@
 /**
  * 项目的入口js
- * config-overrides.js：实现按需打包的配置文件
+ * 此项目git设置的是 dev 分支；
+ * config-overrides.js：实现按需打包的配置文件；
  * 文件夹：
  *  build：打包后的文件资源
  *  node_modules：下载的插件资源

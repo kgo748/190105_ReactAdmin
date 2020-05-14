@@ -41,6 +41,7 @@ export const reqUpdateCategory=({categoryId,categoryName})=>ajax(BASE+"/manage/c
 /*获取一个分类信息,只能根据pCategoryId或categoryId查询所属信息*/
 export const reqCategory=(categoryId)=>ajax(BASE+"/manage/category/info",{categoryId});
 
+
 /*product*/
 /*获取商品分页列表数据，参数为 单个变量*/
 export const reqProducts=(pageNum,pageSize)=>ajax(BASE+"/manage/product/list",{pageNum,pageSize});
@@ -61,8 +62,8 @@ export const reqSearchProducts=({pageNum,pageSize,searchName,searchType})=>ajax(
 });*/
 /*更新商品的状态(上架或下架操作)，1-在售，2-下架*/
 export const reqUpdateStatus=(productId, status)=>ajax(BASE+"/manage/product/updateStatus",{productId, status},"POST");
-/*添加/修改商品，通过商品 product对象 是否有 _id来判断进行的是update还是add操作*/
-export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + ( product._id?'update':'add'), product, 'POST')
+/*添加/修改商品，通过商品 product对象 是否有 _id来判断进行的是update还是add操作，接口里的判断注意用小括号()括起来*/
+export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + ( product._id?'update':'add'), product, 'POST');
 
 /*删除图片*/
 export const reqDeleteImg=(name)=>ajax(BASE + '/manage/img/delete', {name}, "POST");
@@ -86,6 +87,4 @@ export const reqWeather=(city)=>{
         });
     });
 };
-
-
 
