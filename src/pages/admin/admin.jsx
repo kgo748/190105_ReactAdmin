@@ -1,5 +1,6 @@
 /**
  * 后台管理的路由组件
+ * 更改一下导入的自定义组件路径，即可把测试组件应用上；
  */
 import React, {Component} from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -23,6 +24,8 @@ import Bar from "../charts/Bar";
 import Line from "../charts/Line";
 import Pie from "../charts/pie";
 import Order from "../order/order";
+//AntV L7-高德地图
+import Gaode from "../gaode/gaode";
 
 
 /*必须写在import下面*/
@@ -61,6 +64,7 @@ export default class Admin extends Component {
                             <Route path='/charts/line' component={Line}/>
                             <Route path='/charts/pie' component={Pie}/>
                             <Route path='/order' component={Order}/>
+                            <Route path='/gaode' component={Gaode}/>
                             <Redirect to="/home"/>
                         </Switch>
                     </Content>

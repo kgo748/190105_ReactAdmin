@@ -160,7 +160,7 @@ export default class ProductAddUpdate extends Component {
         // 3. 根据结果提示
         if (result.status===0) {
             message.success(`${this.isUpdate ? '更新' : '添加'}商品成功!`);
-            this.props.history.goBack();//返回到列表界面
+            this.props.history.goBack();//返回到列表界面，子组件是一个新的路由(需跳转到上一个路由)就用这个
         } else {
             message.error(`${this.isUpdate ? '更新' : '添加'}商品失败!`);
         }

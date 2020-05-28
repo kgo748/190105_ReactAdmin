@@ -1,23 +1,16 @@
 /**
- * 角色路由
- * 类组件，提取 add-from，使用父组件调用子组件方法的形式实现需求
+ * 角色路由,
+ * 类组件，不提取 add-from，没有子组件; ok
  */
 import React,{ Component } from "react";
-import {Card, Button,message,Table, Modal} from "antd";
+import {Card, Button, Form, Input, Table, Modal,message} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 
 import {PAGE_SIZE} from "../../utils/constants";
-import {reqRoles} from "../../api";
-import AddForm from "./add-form";
+import {reqRoles,reqAddRole} from "../../api";
+
 
 export default class Role extends Component {
-    constructor (props) {
-        super(props);
-
-        //父组件调用子组件的方法
-        this.addForm = React.createRef();
-    }
-
     state={
         roles: [],//角色数组
         role: {}, // 选中的role
@@ -60,7 +53,7 @@ export default class Role extends Component {
         //console.log("role...onRow()...role:", role);//err
         //当前行的可执行多个事件
         onClick: ()=>{ // 点击Table行事件
-            //console.log("role...onRow()...role:", role);//ok
+            console.log("role...onRow()...role:", role);//ok
             //设置state的里role为当前行role对象，配合rowSelection的使用，点击当前行选中radio
             this.setState({role});
         },
@@ -69,15 +62,6 @@ export default class Role extends Component {
         onMouseEnter: event => {}, // 鼠标移入行
         onMouseLeave: event => {},
     });
-
-    /*关闭Modal*/
-    closeModal=()=>{
-        this.setState({isShowAdd: false});
-    };
-    /*打开Modal*/
-    openModal=()=>{
-        this.setState({isShowAdd: true});
-    };
 
     /*获取所有角色列表数据*/
     getRoles=async ()=>{
@@ -91,24 +75,34 @@ export default class Role extends Component {
         }
     };
 
-    /*添加角色，Modal底部确定按钮事件*/
-    addRole=()=>{
-        //调用子组件的方法
-        const roleName=this.addForm.current.getRoleName();
-        console.log("product...role...addRole()...roleName: ", roleName);
-        //判断是否有值
-        if(!roleName || roleName=="" || roleName==undefined){
-            //没有值，进行提示
-            message.error("请输入角色名称");
+    /*关闭Modal*/
+    closeModal=()=>{
+        this.setState({isShowAdd: false});
+    };
+    /*打开Modal*/
+    openModal=()=>{
+        this.setState({isShowAdd: true});
+    };
+
+    formRef = React.createRef();
+    //清空Modal的Input框
+    clearModalInput=()=>{
+        this.formRef.current.resetFields();
+    };
+
+    /*提交表单，即添加角色*/
+    onFinish = async values => {
+        // console.log(values);
+        this.clearModalInput();
+        this.closeModal();
+        const result=await reqAddRole(values.roleName);
+        if(result.status===0){
+            message.success("创建角色成功");
+            //重新加载Table数据
+            this.getRoles();
         }else {
-            //有值，关闭Modal
-            this.closeModal();
-            //并发送请求
-
+            message.error("创建角色失败");
         }
-
-        //进行添加操作
-
     };
 
     componentWillMount() {
@@ -123,12 +117,21 @@ export default class Role extends Component {
         //读取状态state里的数据
         const {roles,role,loading,isShowAdd}=this.state;
 
+        const layout = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 16 },
+        };
+        const tailLayout = {
+            wrapperCol: { offset: 4, span: 16 },
+        };
+
         const title=(
             <span>
                 <Button
                     type="primary"
                     //style={{marginRight: 10}}
-                    onClick={()=>{this.setState({isShowAdd: true})}}
+                    //onClick={()=>{this.setState({isShowAdd: true})}}  //直接在行内定义方法打开
+                    onClick={this.openModal}   /*调用方法打开*/
                 >
                     <PlusOutlined/>
                     创建角色
@@ -148,33 +151,44 @@ export default class Role extends Component {
                     dataSource={roles}
                     rowKey="_id"
                     loading={loading}
+                    rowSelection={{ //antd v4 单选框选择在函数组件里有全新的写法
+                        type: 'radio',
+                        selectedRowKeys: [role._id],
+                        /*onSelect: (role) => { // 选择某个radio时回调
+                            this.setState({
+                                role
+                            });
+                        },*/
+                    }}
+                    onRow={this.onRow}
                     pagination={{
                         defaultPageSize: PAGE_SIZE,
                         showQuickJumper: true,
                         onChange: this.getProducts
                     }}
-                    rowSelection={{ //antd v4 单选框选择在函数组件里有全新的写法
-                        type: 'radio',
-                        selectedRowKeys: [role._id],
-                        onSelect: (role) => { // 选择某个radio时回调
-                            //console.log("role...render()...rowSelection()...onSelect()...role: ", role);
-                            this.setState({
-                                role
-                            });
-                        },
-                    }}
-                    onRow={this.onRow}
                 />
                 <Modal
                     title="创建角色"
                     visible={isShowAdd}
-                    onOk={this.addRole}
-                    onCancel={()=>{
-                        this.setState({isShowAdd: false});//隐藏模态框
-                    }} //*Modal 底部的确定和取消事件*/
+                    footer={null}  /*去掉Modal的底部*/
                 >
-                    {/*传递数据到子组件，用子组件的方式收集数据，在antd4的类组件中不行*/}
-                    <AddForm ref={this.addForm}/>
+                    <Form
+                        {...layout}
+                        ref={this.formRef}
+                        onFinish={this.onFinish}
+                    >
+                        <Form.Item name="roleName" label="角色名称" rules={[{ required: true, message: "角色名称必须输入" }]}>
+                            <Input placeholder="请输入角色名称" />
+                        </Form.Item>
+                        <Form.Item {...tailLayout}>
+                            <Button type="primary" htmlType="submit" style={{marginRight: 30}}>
+                                提交
+                            </Button>
+                            <Button onClick={()=>{this.setState({isShowAdd: false})}}>
+                                取消
+                            </Button>
+                        </Form.Item>
+                    </Form>
                 </Modal>
             </Card>
         );

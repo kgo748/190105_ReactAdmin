@@ -70,7 +70,6 @@ const UpdateForm02=(props)=>{
         //props.setForm(props.setForm);
     }, [updateCategoryValue, props]);
 
-
     return (
         <Form
             form={form}

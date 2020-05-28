@@ -3,7 +3,7 @@
  */
 import React,{Component} from "react";
 
-import {Card, Select, Input, Button, Table, Tag, Space, message} from "antd";
+import {Card, Select, Input, Button, Table, message} from "antd";
 import {PlusOutlined} from '@ant-design/icons';
 
 import LinkButton from "../../components/link-button/index";

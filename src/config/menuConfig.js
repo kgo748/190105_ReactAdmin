@@ -61,10 +61,14 @@ const menuList = [
             },
         ]
     },
-
     {
         title: '订单管理',
         key: '/order',
+        icon: <PieChartOutlined />,
+    },
+    {
+        title: 'AntV L7-高德地图',
+        key: '/gaode',
         icon: <PieChartOutlined />,
     },
 ];

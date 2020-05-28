@@ -53,7 +53,8 @@ class Header extends Component {
                title=item.title;
            } else if(item.children){
                // 在所有子item中查找匹配的
-               const cItem=item.children.find(cItem=>cItem.key===path);
+               // const cItem=item.children.find(cItem=>cItem.key===path);//半对，页面标识标题显示不全
+               const cItem=item.children.find(cItem=>path.indexOf(cItem.key)===0);//ok 解决 添加、修改页面标识标题显示不全
                // 如果有值才说明有匹配的
                if(cItem){
                    title=cItem.title;

@@ -20,7 +20,7 @@ import {message} from "antd";
 import ajax from "./ajax";
 /*跨域的问题先在package.json配置代理 "proxy": "http://localhost:5000"*/
 //const BASE = 'http://localhost:5000';
-const BASE = '';
+const BASE = '/api';
 
 /*登陆*/
 /*export function reqLogin (username, password) {
@@ -30,6 +30,7 @@ const BASE = '';
 export const reqLogin = (username, password) => ajax(BASE+'/login', {username, password}, 'POST');
 //添加用户
 export const reqAddUser=(user)=>ajax(BASE+"/manage/user/add", user, "POST");
+
 
 /*category*/
 /*获取一级/二级分类列表接口，封装的函数默认是get请求，这里就省略掉呗*/
@@ -64,6 +65,14 @@ export const reqSearchProducts=({pageNum,pageSize,searchName,searchType})=>ajax(
 export const reqUpdateStatus=(productId, status)=>ajax(BASE+"/manage/product/updateStatus",{productId, status},"POST");
 /*添加/修改商品，通过商品 product对象 是否有 _id来判断进行的是update还是add操作，接口里的判断注意用小括号()括起来*/
 export const reqAddOrUpdateProduct = (product) => ajax(BASE + '/manage/product/' + ( product._id?'update':'add'), product, 'POST');
+
+
+/*角色role部分接口*/
+//获取所有角色列表
+export const reqRoles=()=>ajax(BASE + "/manage/role/list");
+//添加角色
+export const reqAddRole=(roleName)=>ajax(BASE + "/manage/role/add",{roleName},"POST");
+
 
 /*删除图片*/
 export const reqDeleteImg=(name)=>ajax(BASE + '/manage/img/delete', {name}, "POST");

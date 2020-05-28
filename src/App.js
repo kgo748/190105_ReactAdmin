@@ -1,6 +1,6 @@
 /**
  * 应用的根组件
- * 决定默认进入哪一个页面
+ * 决定默认进入哪一个页面；
  */
 /*导入官方组件*/
 import React, {Component} from "react";//引入React组件
@@ -24,7 +24,7 @@ export default class App extends Component {
     };*/
 
     /*<Route path='/login' component={Login}/> 前面是路径，后面是组件名*/
-    /*<Switch></Switch>只匹配其中一个，默认进入没写路径的组件*/
+    /***<Switch></Switch>只匹配其中一个，默认进入没写路径的组件*/
     /*也可用 HashRouter 路由，不过路径加#号*/
     //浏览器URL路由导航
     render() {

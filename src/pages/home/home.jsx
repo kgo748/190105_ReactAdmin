@@ -1,8 +1,8 @@
+/*首页路由*/
 import React,{ Component } from "react";
 
 import "./home.less";
 
-/*首页路由*/
 export default class Category extends Component {
     render() {
         return (

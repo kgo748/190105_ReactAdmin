@@ -1,5 +1,7 @@
 /**
- * 项目的入口js
+ * 项目的入口js;
+ * react v.16.13.1,antd v.4.x;self跟敲项目；
+ * 默认登陆账号密码：admin, admin;
  * 此项目git设置的是 dev 分支；
  * config-overrides.js：实现按需打包的配置文件；
  * 文件夹：
@@ -15,18 +17,20 @@
  *      utils：工具类文件
  *
  * "proxy": "http://localhost:5000" 实现跨域的代理，转发到这个地址
+ * 自定义函数建议都写在周期函数前面
  *
  * 基于class类组件：
- * class里(class和render()之间的代码)的属性，方法直接定义，方法里定义变量使用 this.xxx;
+ * class里(class和render()之间的代码)的方法，static，state直接定义，方法里定义变量使用 this.xxx，即存放到当前组件对象里;
  * render() 里获取变量需写 let,const, 直接用 this.xxx 调用class里的属性或方法, this.state.xxx 获取state里的属性值；
  * render() 里 return 的HTML结构体 调用class里的属性或方法用 {this.xxx},函数不写(), 调用render() 里的内容直接用 {xxx},xxx:定义好的变量名称;
- * render() 里 return 的HTML结构体的标签使用 行内样式方式： style={{backgroundColor: "#fff", margin: "20px"}}
- * 特殊：class里的组件里调用class里的方法写法，<LinkButton onClick={()=>this.showUpdate()}>修改分类</LinkButton>
+ * render() 里 return 的HTML结构体的标签使用 行内样式方式： style={{backgroundColor: "#fff", margin: "20px"}}，style={{"background": "red"}}
+ * 特殊：class里的组件里调用class里的方法写法，<LinkButton onClick={()=>this.showUpdate()}>修改分类</LinkButton>，用函数包裹起来；
  *
  * 解决 react 项目控制台对 a 标签 使用了 href 属性（设置了值：javascript:;或 javascript: void(0);）的 warning 问题
  * 解决办法：属性值使用#或者#!
  *
  * ***video67，video81 复习、总结 没看
+ * 使用 noStyle 属性移除额外样式
  *
  *
  */
@@ -44,6 +48,7 @@ import memoryUtils from "./utils/memoryUtils";
 
 /*一开始就读取local中保存的user，保存到内存中，这个得等登陆页写完后再加*/
 const user=storageUtils.getUser();//读取
+
 memoryUtils.user=user;//保存
 
 /*将APP组件标签渲染到 index.html(public目录下的index.html页面) 页面的div里*/

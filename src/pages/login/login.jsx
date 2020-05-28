@@ -105,7 +105,7 @@ export default class Login extends Component {
                       <Form.Item
                           name="password"
                           rules={[
-                              {validator: validatePwd},
+                              {validator: validatePwd}, //使用自定义验证器，函数定义在class()内用 this.xxx调用
                           ]}
                       >
                           <Input
